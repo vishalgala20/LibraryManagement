@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management - Books</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #0d47a1, #42a5f5);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #42a5f5;
+            color: white;
+        }
+        input[type="text"] {
+            padding: 8px;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #42a5f5;
+            border: none;
+            border-radius: 5px;
+            color: white;
+        }
+        button:hover {
+            background-color: #0d47a1;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Library Management - Books</h1>
+
+    <!-- Table of Books with Filters in Column Headers -->
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Title
+                    <br>
+                    <input type="text" id="title_filter" placeholder="Filter by Title" onkeyup="filterTable()">
+                </th>
+                <th>
+                    Author
+                    <br>
+                    <input type="text" id="author_filter" placeholder="Filter by Author" onkeyup="filterTable()">
+                </th>
+            </tr>
+        </thead>
+        <tbody id="books_table">
+            {% if books %}
+                {% for book in books %}
+                    <tr>
+                        <td>{{ book['title'] }}</td>
+                        <td>{{ book['author'] }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="2">No books found</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <!-- Button to Add a New Book -->
+    <button onclick="window.location.href='/add_books'">Add New Book</button>
+
+    <script>
+        // JavaScript function to filter table based on column inputs
+        function filterTable() {
+            var titleFilter = document.getElementById("title_filter").value.toLowerCase();
+            var authorFilter = document.getElementById("author_filter").value.toLowerCase();
+            var rows = document.getElementById("books_table").getElementsByTagName("tr");
+
+            for (var i = 0; i < rows.length; i++) {
+                var cells = rows[i].getElementsByTagName("td");
+                if (cells.length > 0) { // Check if it's a valid row with data
+                    var title = cells[0].innerText.toLowerCase();
+                    var author = cells[1].innerText.toLowerCase();
+
+                    // Show or hide rows based on filter input
+                    if (title.indexOf(titleFilter) > -1 && author.indexOf(authorFilter) > -1) {
+                        rows[i].style.display = "";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

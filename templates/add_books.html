@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #0d47a1, #42a5f5);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            background-color: #42a5f5;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+        button:hover {
+            background-color: #0d47a1;
+        }
+        form {
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            color: black;
+            display: inline-block;
+        }
+        form input {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        form button {
+            background-color: #42a5f5;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add New Book</h1>
+
+    <form action="/add_book" method="POST">
+        <input type="text" name="title" placeholder="Book Title" required><br>
+        <input type="text" name="author" placeholder="Author Name" required><br>
+        <button type="submit">Add Book</button>
+    </form>
+
+    <button onclick="window.location.href='/books'">View Books</button>
+</body>
+</html>
