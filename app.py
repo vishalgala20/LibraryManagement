@@ -84,19 +84,59 @@ def display_books():
 
     # Modify SQL query based on search filters
     if search_title and search_author:
-        cursor.execute('SELECT title, author FROM books WHERE title LIKE ? AND author LIKE ?', 
+        cursor.execute('SELECT id, title, author, borrowed FROM books WHERE title LIKE ? AND author LIKE ?', 
                        (f'%{search_title}%', f'%{search_author}%',))
     elif search_title:
-        cursor.execute('SELECT title, author FROM books WHERE title LIKE ?', (f'%{search_title}%',))
+        cursor.execute('SELECT id, title, author, borrowed FROM books WHERE title LIKE ?', (f'%{search_title}%',))
     elif search_author:
-        cursor.execute('SELECT title, author FROM books WHERE author LIKE ?', (f'%{search_author}%',))
+        cursor.execute('SELECT id, title, author, borrowed FROM books WHERE author LIKE ?', (f'%{search_author}%',))
     else:
-        cursor.execute('SELECT title, author FROM books')
+        cursor.execute('SELECT id, title, author, borrowed FROM books')
 
     books = cursor.fetchall()
     conn.close()
 
     return render_template('books.html', books=books, search_title=search_title, search_author=search_author)
+
+@app.route('/delete_book/<int:book_id>', methods=['POST'])
+def delete_book(book_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM books WHERE id = ?', (book_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('display_books'))
+
+
+@app.route('/borrow_book/<int:book_id>', methods=['POST'])
+def borrow_book(book_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE books SET borrowed = 1 WHERE id = ?', (book_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('display_books'))
+
+@app.route('/borrowed_books')
+def borrowed_books():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT id, title, author FROM books WHERE borrowed = 1')
+    borrowed_books = cursor.fetchall()
+    conn.close()
+
+    return render_template('borrowed_books.html', books=borrowed_books)
+
+@app.route('/return_book/<int:book_id>', methods=['POST'])
+def return_book(book_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('UPDATE books SET borrowed = 0 WHERE id = ?', (book_id,))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('borrowed_books'))
+
+
 
 # Route to render the Add Book page
 @app.route('/add_books')
